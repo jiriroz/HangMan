@@ -85,7 +85,7 @@ def letter(data):
             tlacitko.config(state='active')
     
 def database(*args): #precte seznamy slov
-    slova_path = r'' + path + '\Data\Slova\ '
+    slova_path = r'' + path + '\Data\Words\ '
     os.chdir(slova_path)
     nazev = variable.get() + '.txt'
     fo = open(nazev,'r')
@@ -173,8 +173,8 @@ def sel(data):
     data['selection'] = selection
 
 podokno = Tk() #vyber tematu pred zahajenim hry REF
-moznosti_path = 'Data\Slova\*.txt' #cesta k souborum kde se nachazeji seznamy slov
-moznosti0 = glob.glob(moznosti_path)
+moznosti_path = 'Data\Words\*.txt' #cesta k souborum kde se nachazeji seznamy slov REF
+moznosti0 = glob.glob(moznosti_path) #REF
 moznosti = []
 for x in moznosti0: #timto dostaneme list s nazvy seznamu slov
     x = (x.split('\\'))
@@ -185,13 +185,13 @@ ram_vyber.pack()
 v = StringVar()
 v.set(None)
 selection = str
-for text in moznosti:
+for text in moznosti: #REF
     Radiobutton(ram_vyber,text=text,variable =v,value = text,command=lambda:selection(sel(data))).pack()
 potvrdit = Button(ram_vyber,text='OK',width=7,command = podokno.destroy)
 potvrdit.pack()
 label = Label(podokno)
 label.pack()
-geometry = '200x'+str(30+30*len(moznosti))
+geometry = '200x'+str(30+30*len(moznosti)) #REF
 podokno.geometry(geometry) #REF
 podokno.resizable(width=FALSE, height=FALSE) #REF
 podokno.mainloop() #REF
