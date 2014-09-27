@@ -1,4 +1,6 @@
-﻿from tkinter import *
+﻿'''Hangman game with gui. Used tkinter and python 3.4. Author Jiri Roznovjak'''
+
+from tkinter import *
 import random
 import os
 import glob
@@ -31,7 +33,8 @@ def diakritika(nahrada):
     nahrada = nahradit(nahrada,'ď','d')
     return nahrada
 
-def letter(data): #zpracovani zadaneho pismena a vypsani uz hadanych pismen
+def letter(data):
+    #zpracovani zadaneho pismena a vypsani uz hadanych pismen
     slovo = data['slovo']
     ag = data['ag']
     uzhadany = data['uzhadany']
