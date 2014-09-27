@@ -172,8 +172,8 @@ def sel(data):
     selection = v.get()
     data['selection'] = selection
 
-podokno = Tk() #vyber tematu pred zahajenim hry b
-moznosti_path = r'' + path + '\Data\Slova\*.txt' #cesta k souborum kde se nachazeji seznamy slov
+podokno = Tk() #vyber tematu pred zahajenim hry REF
+moznosti_path = 'Data\Slova\*.txt' #cesta k souborum kde se nachazeji seznamy slov
 moznosti0 = glob.glob(moznosti_path)
 moznosti = []
 for x in moznosti0: #timto dostaneme list s nazvy seznamu slov
@@ -192,9 +192,9 @@ potvrdit.pack()
 label = Label(podokno)
 label.pack()
 geometry = '200x'+str(30+30*len(moznosti))
-podokno.geometry(geometry)
-podokno.resizable(width=FALSE, height=FALSE)
-podokno.mainloop()
+podokno.geometry(geometry) #REF
+podokno.resizable(width=FALSE, height=FALSE) #REF
+podokno.mainloop() #REF
 
 
 okno = Tk()
@@ -207,7 +207,7 @@ except Exception:
 
 
 #obrazky
-obrazky_path = r'' + path + '\Data\Obrázky\ '
+obrazky_path = 'Data\Obrázky\ '
 os.chdir(obrazky_path)
 list_of_images = []
 for x in range(1,12):
