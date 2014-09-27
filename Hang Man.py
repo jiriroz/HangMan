@@ -175,22 +175,22 @@ def sel(data):
 podokno = Tk() #vyber tematu pred zahajenim hry REF
 moznosti_path = 'Data\Words\*.txt' #cesta k souborum kde se nachazeji seznamy slov REF
 moznosti0 = glob.glob(moznosti_path) #REF
-moznosti = []
+moznosti = [] #REF
 for x in moznosti0: #timto dostaneme list s nazvy seznamu slov
-    x = (x.split('\\'))
-    x = re.sub(r'.txt$','',x[len(x)-1])
-    moznosti.append(x)
-ram_vyber = LabelFrame(podokno,text='Choose a Topic',labelanchor=N)
-ram_vyber.pack()
-v = StringVar()
-v.set(None)
-selection = str
+    x = (x.split('\\')) #REF
+    x = re.sub(r'.txt$','',x[len(x)-1]) #REF
+    moznosti.append(x) #REF
+ram_vyber = LabelFrame(podokno,text='Choose a Topic',labelanchor=N) #REF
+ram_vyber.pack() #REF
+v = StringVar() #REF
+v.set(None) #REF
+selection = str #REF
 for text in moznosti: #REF
     Radiobutton(ram_vyber,text=text,variable =v,value = text,command=lambda:selection(sel(data))).pack()
-potvrdit = Button(ram_vyber,text='OK',width=7,command = podokno.destroy)
-potvrdit.pack()
-label = Label(podokno)
-label.pack()
+potvrdit = Button(ram_vyber,text='OK',width=7,command = podokno.destroy) #REF
+potvrdit.pack() #REF
+label = Label(podokno) #REF
+label.pack() #REF
 geometry = '200x'+str(30+30*len(moznosti)) #REF
 podokno.geometry(geometry) #REF
 podokno.resizable(width=FALSE, height=FALSE) #REF

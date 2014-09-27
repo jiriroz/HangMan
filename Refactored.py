@@ -8,7 +8,8 @@ import glob
 class HangMan:
 	'''Class that runs gui and game logic'''
 	def __init__(self):
-		pass
+		self.currentWords = []
+		self.topic = ''
 	def accessOptions(self):
 		'''Accesses folder with the list of topics and stores the names'''
 		optionsPath = 'Data\Words\*.txt' #path to the lists of words
@@ -18,30 +19,37 @@ class HangMan:
 			x = (x.split('\\'))
 			x = re.sub(r'.txt$','',x[len(x)-1])
 			self.options.append(x)
-
+		
 	def runInitialWindow(self):
 		'''initial window, selection of a topic at the start of the program'''
 		startWindow = Tk()
-		startWindow.resizable(width=FALSE, height=FALSE)
+		
 		frameOptions = LabelFrame(startWindow,text='Choose a Topic',labelanchor=N)
 		frameOptions.pack()
 		confirm = Button(frameOptions,text='OK',width=7,command=startWindow.destroy)
 		confirm.pack()
-		
-		v = StringVar()
-		v.set(None)
-		selection = str
+		label = Label(startWindow)
+		label.pack()
+		self.v = StringVar()
+		self.v.set(None)
 		for word in self.options:
-			Radiobutton(frameOptions,text=word,variable=v,value = word,command=lambda:selection(sel(data))).pack()
+			Radiobutton(frameOptions,text=word,variable=self.v,value = word).pack()
 		geometry = '200x'+str(30+30*len(self.options))
 		startWindow.geometry(geometry)
+		startWindow.resizable(width=FALSE, height=FALSE)
 		startWindow.mainloop()
-		
+	
+	def runMainWindow(self):
+		'''runs the main window'''
+		self.topic = self.v.get() #gets what topic I chose at the initial window.
+		self.mainWindow = Tk()
+		self.mainWindow.mainloop()
 
 	def run(self):
 		'''method called at the end, wraps up the methods and runs the program'''
 		self.accessOptions()
 		self.runInitialWindow()
+		self.runMainWindow()
 
 
 try:
