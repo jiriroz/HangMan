@@ -84,7 +84,7 @@ def letter(data):
             vstup.config(state='disabled')
             tlacitko.config(state='active')
     
-def database(*args): #precte seznamy slov
+def database(*args): #precte seznamy slov REF
     slova_path = r'' + path + '\Data\Words\ '
     os.chdir(slova_path)
     nazev = variable.get() + '.txt'
@@ -196,60 +196,59 @@ podokno.geometry(geometry) #REF
 podokno.resizable(width=FALSE, height=FALSE) #REF
 podokno.mainloop() #REF
 
+okno = Tk() #REF
 
-okno = Tk()
-okno.geometry('800x600')
-okno.resizable(width=FALSE, height=FALSE)
-try:
-    selection = data['selection']
-except Exception:
-    sys.exit(0)
+try:  #REF
+    selection = data['selection']  #REF
+except Exception:  #REF
+    sys.exit(0)  #REF
 
 
 #obrazky
-obrazky_path = 'Data\Obrázky\ '
-os.chdir(obrazky_path)
-list_of_images = []
-for x in range(1,12):
-    name = str(x)+'.gif'
-    list_of_images.append(PhotoImage(file=name))
+obrazky_path = 'Data\Pictures\ ' #REF
+os.chdir(obrazky_path) #REF
+list_of_images = [] #REF
+for x in range(1,12): #REF
+    name = str(x)+'.gif' #REF
+    list_of_images.append(PhotoImage(file=name)) #REF
 
 
-pozadi = Canvas(width=800, height=600, highlightthickness=0,bg='#FFEBD6')
-pozadi.pack(anchor=NW)
+pozadi = Canvas(width=800, height=600, highlightthickness=0,bg='#FFEBD6') #REF
+pozadi.pack(anchor=NW) #REF
 
-variable = StringVar(okno)
-variable.trace('w',database)
-variable.set(selection)
-t = OptionMenu(okno,variable,*moznosti)
-t.config(highlightthickness=0)
-t.place(x=770,y=12,anchor=NE)
+variable = StringVar(okno) #REF
+variable.trace('w',database) #REF
+variable.set(selection) #REF
+t = OptionMenu(okno,variable,*moznosti) #REF
+t.config(highlightthickness=0) #REF
+t.place(x=770,y=12,anchor=NE) #REF
 
-
-hangman = Canvas(okno,width = 750,height = 400,bg = 'white',highlightthickness=0) #obrazek hangmana
-hangman.place(x=20,y=40)
+hangman = Canvas(okno,width = 750,height = 400,bg = 'white',highlightthickness=0) #obrazek hangmana REF
+hangman.place(x=20,y=40) #REF
 
 slovo = str
-hadanka_canvas = Canvas(okno, width = 590,height=120,bg = 'white',highlightthickness=0) #prazdne pismena, ktere se hadaji
-hadanka_canvas.place(x=180,y=445)
+hadanka_canvas = Canvas(okno, width = 590,height=120,bg = 'white',highlightthickness=0) #prazdne pismena, ktere se hadaji #REF
+hadanka_canvas.place(x=180,y=445) #REF
 
 
-tlacitko = Button(okno,text = 'Next Word',command=lambda:slovo(vybrat_nahodne_slovo(data)),highlightthickness=0) #dalsi slovo
-tlacitko.place(x=20,y=15) 
+tlacitko = Button(okno,text = 'Next Word',command=lambda:slovo(vybrat_nahodne_slovo(data)),highlightthickness=0) #dalsi slovo REF
+tlacitko.place(x=20,y=15) #REF
 
 
-entry_ram = LabelFrame(okno,text = 'Enter a Letter',relief = FLAT,bg='#FFEBD6') #pole, kde se zadavaji pismena
-entry_ram.place(x = 45,y = 475)
+entry_ram = LabelFrame(okno,text = 'Enter a Letter',relief = FLAT,bg='#FFEBD6') #pole, kde se zadavaji pismena REF
+entry_ram.place(x = 45,y = 475) # REF
 
-vstup = Entry(entry_ram,width=5,relief='sunken',font=('Times',14),state='normal')
-vstup.pack()
-vstup.focus_set()
-vstup.bind('<Return>',enter)
-pismeno = str
-vstup_tlacitko = Button(entry_ram,text='OK',command =lambda:pismeno(letter(data)))
-vstup_tlacitko.pack()
+vstup = Entry(entry_ram,width=5,relief='sunken',font=('Times',14),state='normal') # REF
+vstup.pack() # REF
+vstup.focus_set() # REF
+vstup.bind('<Return>',enter) # REF
+
+pismeno = str # REF
+vstup_tlacitko = Button(entry_ram,text='OK',command =lambda:pismeno(letter(data))) # REF
+vstup_tlacitko.pack() # REF
+
 vybrat_nahodne_slovo(data)
 
 
-okno.title('Hang Man')
-okno.mainloop()
+okno.title('Hang Man')  # REF
+okno.mainloop() #REF
