@@ -13,7 +13,7 @@ data = {}
 data['ag'] = ag
 data['uzhadany'] = uzhadany
 
-def diakritika(nahrada):
+def diakritika(nahrada): #REF
     def nahradit(nahrada,x,y):
         x = '[' + x + ']'
         nahrada = re.sub(x,y,nahrada)
@@ -33,7 +33,7 @@ def diakritika(nahrada):
     nahrada = nahradit(nahrada,'ď','d')
     return nahrada
 
-def letter(data):
+def letter(data): #REF
     #zpracovani zadaneho pismena a vypsani uz hadanych pismen
     slovo = data['slovo']
     ag = data['ag']
@@ -163,7 +163,7 @@ def pismena(slovo,*uzhadany): #REF
             hadanka_canvas.create_line(okraj+n*(sirka+mezera),y,okraj+n*(sirka+mezera)+sirka,y,width=1,state=stateline) #vytvoreni car pod pismeny
             hadanka_canvas.create_text(okraj+n*(sirka+mezera)+sirka/2,y-l_h/2,text=slovo[n],font=('Times',height),state=state) #vytvoreni pismena    
 
-def enter(event):
+def enter(event): #REF
     letter(data)
 
 def sel(data): #REF
