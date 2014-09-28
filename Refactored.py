@@ -12,7 +12,8 @@ class HangMan:
 		self.topic = '' #current topic
 		self.wordList = []
 		self.currentWord = ''
-		self.alreadyGuessed = [] #all already guessed words (right and wrong)
+		self.alreadyGuessed = [] #all already guessed letters (right and wrong)
+		self.alreadyGuessedWrong = [] #wrong already guessed letters (for display)
 	def loadPictures(self):
 		'''loads pictures of hangman'''
 		path = 'Data\Pictures\ '
@@ -33,16 +34,20 @@ class HangMan:
 		self.wordList = wordList
 	def randomWord(self):
 		'''chooses a random word from the current topic'''
-		#tlacitko.config(state='disabled')
-		#vstup.config(state='normal')
-		#seznam = database(variable)
 		#ag = data['ag']
 		#del ag[0:len(ag)]
-		self.alreadyGuessed = []
-		#hangman.delete(ALL)
 		i = random.randint(0,len(self.wordList))
 		self.currentWord = (self.wordList[i-1])
-		#pismena(slovo)
+		print (self.currentWord)
+	def newWord(self):
+		'''called after click on next word button. Deletes canvas, chooses new word'''
+		#tlacitko.config(state='disabled')
+		#vstup.config(state='normal')
+		self.alreadyGuessed = []
+		self.hangmanCanvas.delete(ALL)
+		self.randomWord()
+		self.drawLetters()
+	
 	def accessOptions(self):
 		'''Accesses folder with the list of topics and stores the names'''
 		optionsPath = 'Data\Words\*.txt' #path to the lists of words
@@ -78,7 +83,7 @@ class HangMan:
 		self.topic = self.v.get()
 		
 	def runMainWindow(self):
-		'''runs up the main window'''
+		'''runs up the main window. Need to call window mainloop separately after this'''
 		if self.topic == "None":
 			sys.exit(0) #if no topic chosen, closes the program
 		
@@ -90,22 +95,22 @@ class HangMan:
 		background = Canvas(self.mainWindow,width=800, height=600, highlightthickness=0,bg='#FFEBD6')
 		background.pack(anchor=NW)
 		
-		hangmanCanvas = Canvas(self.mainWindow,width = 750,height = 400,bg = 'white',highlightthickness=0) #canvas with the pic of hangman
-		hangmanCanvas.place(x=20,y=40)
+		self.hangmanCanvas = Canvas(self.mainWindow,width = 750,height = 400,bg = 'white',highlightthickness=0) #canvas with the pic of hangman
+		self.hangmanCanvas.place(x=20,y=40)
 		
 		self.wordField = Canvas(self.mainWindow, width = 590,height=120,bg = 'white',highlightthickness=0) #canvas with the unknown word
 		self.wordField.place(x=180,y=445)
 		
-		#nextWord = Button(okno,text = 'Next Word',command=lambda:slovo(vybrat_nahodne_slovo(data)),highlightthickness=0) #dalsi slovo
-		#nextWord.place(x=20,y=15) need to implement random word first
+		self.nextWord = Button(self.mainWindow,text = 'Next Word',command=self.newWord,highlightthickness=0) #next word button
+		self.nextWord.place(x=20,y=15)
 		
 		entryFrame = LabelFrame(self.mainWindow,text = 'Enter a Letter',relief = FLAT,bg='#FFEBD6') #frame that contains field where the letters are entered
 		entryFrame.place(x = 45,y = 475)
 		
-		entryField = Entry(entryFrame,width=5,relief='sunken',font=('Times',14),state='normal')
-		entryField.pack()
-		entryField.focus_set()
-		#entryField.bind('<Return>',enter) need to implement the enter function first
+		self.entryField = Entry(entryFrame,width=5,relief='sunken',font=('Times',14),state='normal')
+		self.entryField.pack()
+		self.entryField.focus_set()
+		#self.entryField.bind('<Return>',enter) need to implement the enter function first
 		
 		topicVar = StringVar(self.mainWindow)
 		topicVar.set(self.topic)
@@ -174,6 +179,68 @@ class HangMan:
 				self.wordField.create_line(offset+n*(lineWidth+space),y,offset+n*(lineWidth+space)+lineWidth,y,width=1,state=stateline) #vytvoreni car pod pismeny
 				self.wordField.create_text(offset+n*(lineWidth+space)+lineWidth/2,y-l_h/2,text=word[n],font=('Times',height),state=state) #vytvoreni pismena    
 
+	def proceedLetter(self):
+		#zpracovani zadaneho pismena a vypsani uz hadanych pismen
+		slovo = self.currentWord
+		slovo_test = slovo.lower()
+		slovo_test = diakritika(slovo_test)
+		pismeno = (self.entryField.get()).lower()
+		self.entryField.delete(0,END)
+		if (pismeno in uzhadany) or (pismeno not in 'abcdefghijklmnopqrstuwvxyz0123456789') or ((len(pismeno)) != 1)or(len(ag)==11):
+			return #return if the letter has been already guessed or is not in the alphabet
+		self.alreadyGuessed+=pismeno
+		self.alreadyGuessed+=pismeno.upper()
+		if pismeno == 'a':uzhadany+='·‰Aƒ'
+		elif pismeno == 'e':uzhadany+='ÈÎÏ…ÃÀ'
+		elif pismeno == 'i':uzhadany+='ÌÕ'   
+		elif pismeno == 'o':uzhadany+='Ûˆ”÷'   
+		elif pismeno == 'u':uzhadany+='˘˙¸⁄Ÿ‹'    
+		elif pismeno == 'y':uzhadany+='˝›'
+		elif pismeno == 'r':uzhadany+='¯ÿ'
+		elif pismeno == 's':uzhadany+='öä'
+		elif pismeno == 't':uzhadany+='ùç'
+		elif pismeno == 'z':uzhadany+='ûé'
+		elif pismeno == 'd':uzhadany+='Ôœ'
+		elif pismeno == 'c':uzhadany+='Ë»'
+		elif pismeno == 'n':uzhadany+='Ú“'
+		if pismeno in slovo_test: #if the letter is correct
+			self.drawLetters()
+			hlp = 0
+			for x in list(slovo):
+				if x in self.alreadyGuessed:
+					hlp +=1
+			if hlp == len(''.join(re.split("[ -?!;.,]",slovo))): #if the game if won
+				self.youWin()
+				self.endgame()
+		else: #if the letter is wrong
+			self.alreadyGuessedWrong.append(pismeno.upper())
+			self.drawAlreadyGuessed()
+			for x in range(1,12):
+				if len(ag)==x:
+					hangman.create_image(0,0,anchor=NW,image=list_of_images[x-1])
+			if len(ag) == 11: #if the game is lost
+				self.youLose()
+				self.endGame()
+				self.alreadyGuessed.extend(list(slovo))
+				self.drawLetters()
+				
+	def drawAlreadyGuessed(self):
+		'''draws already guessed letters'''
+		agprint = ', '.join(self.alreadyGuessedWrong)
+		self.hangmanCanvas.create_text(20,375,text=agprint,font = ('Times,14'),anchor = NW)
+				
+	def youWin(self):
+		'''called after the whole word is guessed'''
+		self.hangmanCanvas.create_text(275,200,text='You win!',fill='red',font=('Times',28))
+	
+	def youLose(self):
+		'''called after you run out of attempts'''
+		self.hangmanCanvas.create_text(275,200,text='Game Over',fill='red',font=('Times',28))
+
+	def endGame(self):
+		'''after the game ends, configures widgets'''
+		self.nextWord.config(state='active')
+		self.entryField.config(state='disabled')
 
 	def run(self):
 		'''method called at the end, wraps up the methods and runs the program'''

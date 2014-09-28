@@ -168,7 +168,7 @@ def pismena(slovo,*uzhadany): #REF
 def enter(event):
     letter(data)
 
-def sel(data):
+def sel(data): #REF
     selection = v.get()
     data['selection'] = selection
 
