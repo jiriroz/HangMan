@@ -12,6 +12,7 @@ class HangMan:
 		self.topic = '' #current topic
 		self.wordList = []
 		self.currentWord = ''
+		self.alreadyGuessed = [] #all already guessed words (right and wrong)
 	def loadPictures(self):
 		'''loads pictures of hangman'''
 		path = 'Data\Pictures\ '
@@ -22,10 +23,10 @@ class HangMan:
 			self.images.append(PhotoImage(file=name))
 	def loadWords(self):
 		'''loads and stores words from a certain topic'''
-		path = '\Data\Words\ '
+		path = 'Data\Words\ '
 		os.chdir(path)
 		title = self.topic + '.txt'
-		wordFile = open(nazev,'r')
+		wordFile = open(title,'r')
 		wordList = wordFile.read()
 		wordFile.close()
 		wordList = wordList.split('\n')
@@ -36,12 +37,11 @@ class HangMan:
 		#vstup.config(state='normal')
 		#seznam = database(variable)
 		#ag = data['ag']
-		#uzhadany = data['uzhadany']
 		#del ag[0:len(ag)]
-		#del uzhadany[0:len(uzhadany)]
+		self.alreadyGuessed = []
 		#hangman.delete(ALL)
 		i = random.randint(0,len(self.wordList))
-		self.currentWord = (self.WordList[i-1])
+		self.currentWord = (self.wordList[i-1])
 		#pismena(slovo)
 	def accessOptions(self):
 		'''Accesses folder with the list of topics and stores the names'''
@@ -73,9 +73,12 @@ class HangMan:
 		startWindow.resizable(width=FALSE, height=FALSE)
 		startWindow.mainloop()
 	
+	def getTopic(self):
+		'''gets what topic I chose at the initial window.'''
+		self.topic = self.v.get()
+		
 	def runMainWindow(self):
 		'''runs up the main window'''
-		self.topic = self.v.get() #gets what topic I chose at the initial window.
 		if self.topic == "None":
 			sys.exit(0) #if no topic chosen, closes the program
 		
@@ -90,8 +93,8 @@ class HangMan:
 		hangmanCanvas = Canvas(self.mainWindow,width = 750,height = 400,bg = 'white',highlightthickness=0) #canvas with the pic of hangman
 		hangmanCanvas.place(x=20,y=40)
 		
-		wordField = Canvas(self.mainWindow, width = 590,height=120,bg = 'white',highlightthickness=0) #canvas with the unknown word
-		wordField.place(x=180,y=445)
+		self.wordField = Canvas(self.mainWindow, width = 590,height=120,bg = 'white',highlightthickness=0) #canvas with the unknown word
+		self.wordField.place(x=180,y=445)
 		
 		#nextWord = Button(okno,text = 'Next Word',command=lambda:slovo(vybrat_nahodne_slovo(data)),highlightthickness=0) #dalsi slovo
 		#nextWord.place(x=20,y=15) need to implement random word first
@@ -112,17 +115,76 @@ class HangMan:
 		
 		confirmLetter = Button(entryFrame,text='OK') #need to add the command to proceed the letter
 		confirmLetter.pack()
-		
-		
-		
-		self.mainWindow.mainloop()
+
+	def drawLetters(self):
+		""" draws the word that I'm guessing """
+		word = self.currentWord
+		self.wordField.delete(ALL)
+		y = 70 #y-coordinate of the line
+		l_h = 25 #how high above the line will the letter be
+		offset = 20 #offset of the first letter from the margin
+		space = 10 #space between the letters
+		lineWidth = 20 #width of the line
+		height = 20 #height of the letters
+		wordcount = 0
+		lettercount = 0
+		maxlen = 0
+		ct = -1
+		if len(word) > 18: #if the lenght is bigger, split it into two lines
+			test = word.split(' ')
+			for x in test:
+				lettercount += len(x)+1
+				if lettercount > 18:
+					break
+				wordcount +=1
+			for x in range(wordcount):
+				maxlen +=(1+len(test[x]))
+			for n in range(maxlen):
+				state = 'hidden'
+				if (word[n] in self.alreadyGuessed)or(word[n] in "-!,'?;."):
+					state = 'normal'
+				if word[n] in " -?!';.,":
+					stateline = 'hidden'
+				else:
+					stateline = 'normal'
+				y1 = y-30
+				self.wordField.create_line(offset+n*(lineWidth+space),y1,offset+n*(lineWidth+space)+lineWidth,y1,width=1,state=stateline)
+				self.wordField.create_text(offset+n*(lineWidth+space)+lineWidth/2,y1-l_h/2,text=word[n],font=('Times',height),state=state)
+			for n in range(maxlen,len(word)):
+				ct +=1
+				state = 'hidden'
+				if (word[n] in self.alreadyGuessed)or(word[n] in "-!,'?;."):
+					state = 'normal'
+				if word[n] in " -?!';.,":
+					stateline = 'hidden'
+				else:
+					stateline = 'normal'
+				y2 = y+20
+				self.wordField.create_line(offset+ct*(lineWidth+space),y2,offset+ct*(lineWidth+space)+lineWidth,y2,width=1,state=stateline)
+				self.wordField.create_text(offset+ct*(lineWidth+space)+lineWidth/2,y2-l_h/2,text=word[n],font=('Times',height),state=state)        
+		else:
+			for n in range(len(word)):
+				state = 'hidden'
+				if (word[n] in self.alreadyGuessed)or(word[n] in "-!,'?;."):
+					state = 'normal'
+				if word[n] in " -?!';.,":
+					stateline = 'hidden'
+				else:
+					stateline = 'normal'
+				self.wordField.create_line(offset+n*(lineWidth+space),y,offset+n*(lineWidth+space)+lineWidth,y,width=1,state=stateline) #vytvoreni car pod pismeny
+				self.wordField.create_text(offset+n*(lineWidth+space)+lineWidth/2,y-l_h/2,text=word[n],font=('Times',height),state=state) #vytvoreni pismena    
+
 
 	def run(self):
 		'''method called at the end, wraps up the methods and runs the program'''
 		self.accessOptions()
 		self.runInitialWindow()
+		self.getTopic()
+		self.loadWords()
+		self.randomWord()
 		self.runMainWindow()
-
+		self.drawLetters()
+		self.mainWindow.mainloop()
 
 try:
 	game = HangMan()

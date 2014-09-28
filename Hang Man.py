@@ -94,7 +94,7 @@ def database(*args): #precte seznamy slov REF
     seznam = seznam.split('\n')
     return seznam
     
-def vybrat_nahodne_slovo(data): #zmacknutim tlacitka vybere nahodne slovo z databaze
+def vybrat_nahodne_slovo(data): #zmacknutim tlacitka vybere nahodne slovo z databaze REF
     tlacitko.config(state='disabled')
     vstup.config(state='normal')
     seznam = database(variable)
@@ -108,7 +108,7 @@ def vybrat_nahodne_slovo(data): #zmacknutim tlacitka vybere nahodne slovo z data
     pismena(slovo)
     data['slovo'] = slovo
     
-def pismena(slovo,*uzhadany):
+def pismena(slovo,*uzhadany): #REF
     uzhadany = list(*uzhadany)
     hadanka_canvas.delete(ALL)
     y = 70 #y-souradnice umisteni line
