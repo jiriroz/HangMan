@@ -74,9 +74,7 @@ def letter(data):
         ag.append(pismeno.upper())
         agprint = ', '.join(ag)
         hangman.create_text(20,375,text=agprint,font = ('Times,14'),anchor = NW)
-        for x in range(1,12):
-            if len(ag)==x:
-                hangman.create_image(0,0,anchor=NW,image=list_of_images[x-1])
+        hangman.create_image(0,0,anchor=NW,image=list_of_images[len(ag)-1])
         if len(ag) == 11:
             hangman.create_text(275,200,text='Game Over',fill='red',font=('Times',28))
             uzhadany.extend(list(slovo))

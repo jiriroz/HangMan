@@ -1,4 +1,4 @@
-'''Hangman game with gui. Used tkinter and python 3.4. Author Jiri Roznovjak'''
+Ôªø'''Hangman game with gui. Used tkinter and python 3.4. Author Jiri Roznovjak'''
 
 from tkinter import *
 import random
@@ -8,23 +8,24 @@ import glob
 class HangMan:
 	'''Class that runs gui and game logic'''
 	def __init__(self):
+		self.path = os.getcwd()
 		self.currentWords = []
 		self.topic = '' #current topic
 		self.wordList = []
 		self.currentWord = ''
 		self.alreadyGuessed = [] #all already guessed letters (right and wrong)
 		self.alreadyGuessedWrong = [] #wrong already guessed letters (for display)
+		self.images = []
 	def loadPictures(self):
 		'''loads pictures of hangman'''
-		path = 'Data\Pictures\ '
+		path = r'' + self.path + '\Data\Pictures\ '
 		os.chdir(path)
-		self.images = []
 		for x in range(1,12):
 			name = str(x)+'.gif'
 			self.images.append(PhotoImage(file=name))
 	def loadWords(self):
 		'''loads and stores words from a certain topic'''
-		path = 'Data\Words\ '
+		path = r'' + self.path + '\Data\Words\ '
 		os.chdir(path)
 		title = self.topic + '.txt'
 		wordFile = open(title,'r')
@@ -41,8 +42,8 @@ class HangMan:
 		print (self.currentWord)
 	def newWord(self):
 		'''called after click on next word button. Deletes canvas, chooses new word'''
-		#tlacitko.config(state='disabled')
-		#vstup.config(state='normal')
+		self.nextWord.config(state='disabled')
+		self.entryField.config(state='normal')
 		self.alreadyGuessed = []
 		self.hangmanCanvas.delete(ALL)
 		self.randomWord()
@@ -110,7 +111,7 @@ class HangMan:
 		self.entryField = Entry(entryFrame,width=5,relief='sunken',font=('Times',14),state='normal')
 		self.entryField.pack()
 		self.entryField.focus_set()
-		#self.entryField.bind('<Return>',enter) need to implement the enter function first
+		self.entryField.bind('<Return>',self.proceedLetter) #need to implement the enter function first
 		
 		topicVar = StringVar(self.mainWindow)
 		topicVar.set(self.topic)
@@ -179,30 +180,31 @@ class HangMan:
 				self.wordField.create_line(offset+n*(lineWidth+space),y,offset+n*(lineWidth+space)+lineWidth,y,width=1,state=stateline) #vytvoreni car pod pismeny
 				self.wordField.create_text(offset+n*(lineWidth+space)+lineWidth/2,y-l_h/2,text=word[n],font=('Times',height),state=state) #vytvoreni pismena    
 
-	def proceedLetter(self):
+
+	def proceedLetter(self,event):
 		#zpracovani zadaneho pismena a vypsani uz hadanych pismen
 		slovo = self.currentWord
 		slovo_test = slovo.lower()
-		slovo_test = diakritika(slovo_test)
+		#slovo_test = diakritika(slovo_test) need to implement this
 		pismeno = (self.entryField.get()).lower()
 		self.entryField.delete(0,END)
-		if (pismeno in uzhadany) or (pismeno not in 'abcdefghijklmnopqrstuwvxyz0123456789') or ((len(pismeno)) != 1)or(len(ag)==11):
+		if (pismeno in self.alreadyGuessed) or (pismeno not in 'abcdefghijklmnopqrstuwvxyz0123456789') or ((len(pismeno)) != 1)or(len(self.alreadyGuessedWrong)==11):
 			return #return if the letter has been already guessed or is not in the alphabet
 		self.alreadyGuessed+=pismeno
 		self.alreadyGuessed+=pismeno.upper()
-		if pismeno == 'a':uzhadany+='·‰Aƒ'
-		elif pismeno == 'e':uzhadany+='ÈÎÏ…ÃÀ'
-		elif pismeno == 'i':uzhadany+='ÌÕ'   
-		elif pismeno == 'o':uzhadany+='Ûˆ”÷'   
-		elif pismeno == 'u':uzhadany+='˘˙¸⁄Ÿ‹'    
-		elif pismeno == 'y':uzhadany+='˝›'
-		elif pismeno == 'r':uzhadany+='¯ÿ'
-		elif pismeno == 's':uzhadany+='öä'
-		elif pismeno == 't':uzhadany+='ùç'
-		elif pismeno == 'z':uzhadany+='ûé'
-		elif pismeno == 'd':uzhadany+='Ôœ'
-		elif pismeno == 'c':uzhadany+='Ë»'
-		elif pismeno == 'n':uzhadany+='Ú“'
+		if pismeno == 'a':self.alreadyGuessed+='√°√§A√Ñ'
+		elif pismeno == 'e':self.alreadyGuessed+='√©√´ƒõ√âƒö√ã'
+		elif pismeno == 'i':self.alreadyGuessed+='√≠√ç'   
+		elif pismeno == 'o':self.alreadyGuessed+='√≥√∂√ì√ñ'   
+		elif pismeno == 'u':self.alreadyGuessed+='≈Ø√∫√º√ö≈Æ√ú'    
+		elif pismeno == 'y':self.alreadyGuessed+='√Ω√ù'
+		elif pismeno == 'r':self.alreadyGuessed+='≈ô≈ò'
+		elif pismeno == 's':self.alreadyGuessed+='≈°≈†'
+		elif pismeno == 't':self.alreadyGuessed+='≈•≈§'
+		elif pismeno == 'z':self.alreadyGuessed+='≈æ≈Ω'
+		elif pismeno == 'd':self.alreadyGuessed+='ƒèƒé'
+		elif pismeno == 'c':self.alreadyGuessed+='ƒçƒå'
+		elif pismeno == 'n':self.alreadyGuessed+='≈à≈á'
 		if pismeno in slovo_test: #if the letter is correct
 			self.drawLetters()
 			hlp = 0
@@ -211,19 +213,21 @@ class HangMan:
 					hlp +=1
 			if hlp == len(''.join(re.split("[ -?!;.,]",slovo))): #if the game if won
 				self.youWin()
-				self.endgame()
+				self.endGame()
 		else: #if the letter is wrong
 			self.alreadyGuessedWrong.append(pismeno.upper())
 			self.drawAlreadyGuessed()
-			for x in range(1,12):
-				if len(ag)==x:
-					hangman.create_image(0,0,anchor=NW,image=list_of_images[x-1])
-			if len(ag) == 11: #if the game is lost
+			self.drawHangman()
+			if len(self.alreadyGuessedWrong) == 11: #if the game is lost
 				self.youLose()
 				self.endGame()
 				self.alreadyGuessed.extend(list(slovo))
 				self.drawLetters()
-				
+	
+	def drawHangman(self):
+		'''draws the picture of hangman'''
+		self.hangmanCanvas.create_image(0,0,anchor=NW,image=self.images[len(self.alreadyGuessedWrong)-1])
+	
 	def drawAlreadyGuessed(self):
 		'''draws already guessed letters'''
 		agprint = ', '.join(self.alreadyGuessedWrong)
@@ -250,6 +254,7 @@ class HangMan:
 		self.loadWords()
 		self.randomWord()
 		self.runMainWindow()
+		self.loadPictures()
 		self.drawLetters()
 		self.mainWindow.mainloop()
 
