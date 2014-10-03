@@ -45,6 +45,7 @@ class HangMan:
 		
 	def newWord(self):
 		'''called after click on next word button. Deletes canvas, chooses new word'''
+		self.checkTopic()
 		self.nextWord.config(state='disabled')
 		self.entryField.config(state='normal')
 		self.alreadyGuessed = []
@@ -247,10 +248,13 @@ class HangMan:
 		'''after the game ends, configures widgets and checks if the topic has been changed'''
 		self.nextWord.config(state='active')
 		self.entryField.config(state='disabled')
+
+	def checkTopic(self):
+		'''checks if the topic has been changed and if it has, loads the new one'''
 		if self.topic != self.getTopic():
 			self.topic = self.getTopic()
 			self.loadWords()
-
+	
 	def run(self):
 		'''method called at the end, wraps up the methods and runs the program'''
 		self.accessOptions()
