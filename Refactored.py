@@ -19,6 +19,16 @@ class HangMan:
 		self.alreadyGuessedWrong = [] #wrong already guessed letters (for display)
 		self.images = []
 		
+	def accessOptions(self):
+		'''Accesses folder with the list of topics and stores the names'''
+		optionsPath = 'Data\Words\*.txt' #path to the lists of words
+		optionNames = glob.glob(optionsPath) #gets names of lists
+		self.options = []
+		for x in optionNames:
+			x = (x.split('\\'))
+			x = re.sub(r'.txt$','',x[len(x)-1])
+			self.options.append(x)
+		
 	def loadPictures(self):
 		'''loads pictures of hangman'''
 		path = r'' + self.path + '\Data\Pictures\ '
@@ -54,16 +64,6 @@ class HangMan:
 		self.randomWord()
 		self.drawLetters()
 	
-	def accessOptions(self):
-		'''Accesses folder with the list of topics and stores the names'''
-		optionsPath = 'Data\Words\*.txt' #path to the lists of words
-		optionNames = glob.glob(optionsPath) #gets names of lists
-		self.options = []
-		for x in optionNames:
-			x = (x.split('\\'))
-			x = re.sub(r'.txt$','',x[len(x)-1])
-			self.options.append(x)
-		
 	def runInitialWindow(self):
 		'''initial window, selection of a topic at the start of the program'''
 		startWindow = Tk()
