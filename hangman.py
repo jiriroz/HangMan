@@ -5,7 +5,8 @@ import random
 import os
 import glob
 
-CZECH = {'á':'a','é':'e','ě':'e','í':'i','ó':'o','ú':'u','ů':'u','ý':'y','š':'s','č':'c','ř':'r','ž':'z','ň':'n','ť':'t','ĺ':'l','ď':'d'}
+CZECH = {'á':'a','é':'e','ě':'e','í':'i','ó':'o','ú':'u','ů':'u','ý':'y','š':'s',
+         'č':'c','ř':'r','ž':'z','ň':'n','ť':'t','ĺ':'l','ď':'d'}
 
 class HangMan:
 	'''Class that runs gui and game logic'''
@@ -95,22 +96,22 @@ class HangMan:
 		background = Canvas(self.mainWindow,width=800, height=600, highlightthickness=0,bg='#FFEBD6')
 		background.pack(anchor=NW)
 		
-		self.hangmanCanvas = Canvas(self.mainWindow,width = 750,height = 400,bg = 'white',highlightthickness=0) #canvas with the pic of hangman
+		self.hangmanCanvas = Canvas(self.mainWindow,width = 750,height = 400,bg = 'white',highlightthickness=0)   			#canvas with the pic of hangman
 		self.hangmanCanvas.place(x=20,y=40)
 		
-		self.wordField = Canvas(self.mainWindow, width = 590,height=120,bg = 'white',highlightthickness=0) #canvas with the unknown word
+		self.wordField = Canvas(self.mainWindow, width = 590,height=120,bg = 'white',highlightthickness=0) 			#canvas with the unknown word
 		self.wordField.place(x=180,y=445)
 		
 		self.nextWord = Button(self.mainWindow,text = 'Next Word',command=self.newWord,highlightthickness=0,state='disabled') #next word button
 		self.nextWord.place(x=20,y=15)
-		
-		entryFrame = LabelFrame(self.mainWindow,text = 'Enter a Letter',relief = FLAT,bg='#FFEBD6') #frame that contains field where the letters are entered
+		#frame that contains field where the letters are entered
+		entryFrame = LabelFrame(self.mainWindow,text = 'Enter a Letter',relief = FLAT,bg='#FFEBD6')
 		entryFrame.place(x = 45,y = 475)
 		
 		self.entryField = Entry(entryFrame,width=5,relief='sunken',font=('Verdana',14),state='normal')
 		self.entryField.pack()
 		self.entryField.focus_set()
-		self.entryField.bind('<Return>',self.proceedLetterEvent) #need to implement the enter function first
+		self.entryField.bind('<Return>',self.proceedLetterEvent)
 		
 		self.topicVar = StringVar(self.mainWindow)
 		self.topicVar.set(self.topic)
@@ -118,7 +119,7 @@ class HangMan:
 		changeTopic.config(highlightthickness=0)
 		changeTopic.place(x=770,y=12,anchor=NE)
 		
-		confirmLetter = Button(entryFrame,text='OK',command=self.proceedLetter) #need to add the command to proceed the letter
+		confirmLetter = Button(entryFrame,text='OK',command=self.proceedLetter)
 		confirmLetter.pack()
 
 
